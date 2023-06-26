@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>078efef1-d139-48ed-92f5-f8d4a0592374</groupId>
+		<artifactId>parent-pom</artifactId>
+		<version>1.0.35</version>
+		<relativePath/>
+	</parent>
+	
+	<groupId>078efef1-d139-48ed-92f5-f8d4a0592374</groupId>
+	<artifactId>mule-taxpayer-etl</artifactId>
+	<version>1.0.0</version>
+	<packaging>mule-application</packaging>
+	<name>mule-taxpayer-etl</name>
+	<description>Mulesoft ETL for extracting and process tax payers data</description>
+
+	<properties>
+		<!-- Exchange documentation. Details on https://docs.mulesoft.com/exchange/to-publish-assets-maven#publish-an-asset-with-mutable-data -->
+        <categories key="API layer">System</categories>
+        <fields key="sourceCode">https://github.com/jpontdia/mule-taxpayer-etl</fields>
+        <tags>Micorp, ftp, Database, System, Example</tags>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mule.tools.maven</groupId>
+				<artifactId>mule-maven-plugin</artifactId>
+				<configuration>
+					<sharedLibraries>
+						<sharedLibrary>
+							<groupId>org.springframework.security</groupId>
+							<artifactId>spring-security-config</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework.security</groupId>
+							<artifactId>spring-security-crypto</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-core</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-beans</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-context</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework.security</groupId>
+							<artifactId>spring-security-core</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.apache.derby</groupId>
+							<artifactId>derby</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.apache.commons</groupId>
+							<artifactId>commons-dbcp2</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-jdbc</artifactId>
+						</sharedLibrary>
+					</sharedLibraries>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-sftp-connector</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-scripting-module</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-spring-module</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		
+		<!-- Spring Framework-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-crypto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+		
+		<!-- Database dependencies-->
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-db-connector</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+		</dependency>
+	</dependencies>
+
+
+	<!--Repository to get the artifacts for your Anypoint organization -->
+	<repositories>
+		<repository>
+			<id>anypoint-exchange-v3</id>
+			<name>Anypoint Exchange V3</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>		
+</project>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule 
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" 
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" 
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core 
+		http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/sftp 
+		http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+		http://www.mulesoft.org/schema/mule/ee/core 
+		http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+		http://www.mulesoft.org/schema/mule/batch 
+		http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+		
+	<flow name="mule-taxpayer-etlFlow" doc:id="33eef536-ef4f-40f9-a6a9-f887d30c87cf" >
+	
+		<sftp:listener 
+			doc:name="On New or Updated File" 
+			doc:id="205c25e7-1030-4dc6-85d5-12a18007cd6e" 
+			directory="${ftp.directoryinput}" 
+			moveToDirectory="${ftp.directoryoutput}" 
+			overwrite="true" 
+			config-ref="SFTP_Config">
+	
+			<scheduling-strategy >
+				<fixed-frequency 
+					frequency="15" 
+					timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</sftp:listener>
+		
+		<ee:transform 
+			doc:name="Transform Message" 
+			doc:id="e4b5a2fe-0f95-4593-a091-deb233027115" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map(data, index) -> {
+	FIRSTNAME: data.FIRSTNAME,
+	LASTNAME: data.LASTNAME,
+	"TYPE-TIN": data."TYPE-TIN",
+	TIN: data.TIN
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		
+		<logger 
+			level="INFO" 
+			doc:name="Logger" 
+			doc:id="a2a9810d-c9a9-4d16-af48-d4957e4d645b" 
+			message="#[payload]"/>
+			
+		<batch:job 
+			jobName="mule-taxpayer-etlBatch_Job" 
+			doc:id="c72872bf-8e29-45f1-a9d5-988c6f1d36ca" 
+			blockSize="2">
+			
+			<batch:process-records >
+				<batch:step 
+					name="Batch_Step" 
+					doc:id="998a4116-7947-4f4d-b304-c040e5aa0732" 
+					acceptPolicy="ALL">
+					
+					<ee:transform 
+						doc:name="Transform Message" 
+						doc:id="71a82751-9a36-45db-8e05-aa29d31426b3" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	"firstName": payload.FIRSTNAME,
+	"lastName": payload.LASTNAME,
+	"typeTin": payload."TYPE-TIN",
+	"tin": payload.TIN
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					
+					<batch:aggregator 
+						doc:name="Batch Aggregator" 
+						doc:id="3e212109-e3a7-4e63-9fc2-c2eb8770cb95" 
+						size="2">
+						<ee:transform 
+							doc:name="Transform Message" 
+							doc:id="32e509a2-b48d-40c2-8e04-f13371765f28" >
+							<ee:message >
+							</ee:message>
+							<ee:variables >
+								<ee:set-variable variableName="batchOutput" ><![CDATA[%dw 2.0
+output application/json
+---
+payload map (data, index) -> {
+	"firstName": data.firstName,
+	"lastName": data.lastName,
+	"typeTin": data.typeTin,
+	"tin": data.tin	
+}]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+						
+						<sftp:write 
+							doc:name="Write" 
+							doc:id="71c7bdad-b256-43f6-8218-fd6c626d7062" 
+							path="#['/process/taxpayer_' ++  (random() * 1000) ++ '.json']"
+							config-ref="SFTP_Config">
+							<sftp:content ><![CDATA[#[vars.batchOutput]]]></sftp:content>
+						</sftp:write>
+						<db:bulk-insert 
+							doc:name="Bulk insert" 
+							doc:id="cfb5525b-a61b-4fa5-b80d-b9cafb29e69b" 
+							config-ref="Database_Config" >
+							
+							<db:bulk-input-parameters >
+								<![CDATA[#[vars.batchOutput]]]>
+							</db:bulk-input-parameters>
+							
+							<db:sql >
+<![CDATA[INSERT INTO demodb.TAX_PAYER (FIRST_NAME, LAST_NAME, TYPE_TIN, TIN) 
+VALUES
+(:firstName, :lastName, :typeTin, :tin)]]>
+							</db:sql>
+						</db:bulk-insert>
+						
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			
+			<batch:on-complete >
+				<logger 
+					level="INFO" 
+					doc:name="Logger" 
+					doc:id="534df690-1cc0-403c-a880-a072d45d11ce" 
+					message="#[payload]"/>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+</mule>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule 
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:spring="http://www.mulesoft.org/schema/mule/spring" 
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="
+	http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd 
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+	http://www.mulesoft.org/schema/mule/http 
+	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+	http://www.mulesoft.org/schema/mule/core 
+	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/spring 
+	http://www.mulesoft.org/schema/mule/spring/current/mule-spring.xsd">
+	
+	<spring:config name="Spring_Config" doc:name="Spring Config" doc:id="662b1e63-881d-4fce-8c9b-3383201e13a5" files="springbeans.xml" />
+
+	<http:listener-config 
+		name="HTTP_Listener_config" 
+		doc:name="HTTP Listener config" 
+		doc:id="2fba996a-2aa0-4839-9bab-4e72c23c3454" >
+		
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	
+	<db:config 
+		name="Database_Config" 
+		doc:name="Database Config" 
+		doc:id="8ebf2354-9bb4-4199-8b9b-a34dde71c713" >
+		
+		<db:generic-connection 
+			url="jdbc:derby:memory:demodb" 
+			driverClassName="org.apache.derby.jdbc.EmbeddedDriver" />
+	</db:config>
+	
+	<sftp:config 
+		name="SFTP_Config" 
+		doc:name="SFTP Config" 
+		doc:id="569e84a1-2b2d-4aa9-810b-bc59afd1299e" >
+		<sftp:connection 
+			host="${ftp.host}" 
+			username="${ftp.username}" 
+			password="${ftp.password}" />
+	</sftp:config>
+	
+	<configuration-properties 
+		doc:name="Configuration properties" 
+		doc:id="f3b3fba3-9ae4-4e5a-bc2d-4b982be94739" 
+		file="config.yaml" />
+</mule>

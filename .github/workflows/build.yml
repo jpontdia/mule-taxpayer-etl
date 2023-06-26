@@ -1,0 +1,15 @@
+name: Build and deploy
+ 
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: 
+
+jobs:
+  Mulesoft:
+    uses: jpontdia/mulesoft-pipeline/.github/workflows/mulesoft.yml@main
+    with:
+      keyvault-key: jpworks-keyvault
+    secrets:
+      azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      gist-accesstoken: ${{ secrets.GIST_ACCESSTOKEN }}
