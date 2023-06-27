@@ -11,7 +11,7 @@
 	
 	<groupId>078efef1-d139-48ed-92f5-f8d4a0592374</groupId>
 	<artifactId>mule-taxpayer-etl</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>mule-application</packaging>
 	<name>mule-taxpayer-etl</name>
 	<description>Mulesoft ETL for extracting and process tax payers data</description>
@@ -19,8 +19,9 @@
 	<properties>
 		<!-- Exchange documentation. Details on https://docs.mulesoft.com/exchange/to-publish-assets-maven#publish-an-asset-with-mutable-data -->
         <categories key="API layer">System</categories>
+        <categories key="Backend">Database</categories>
         <fields key="sourceCode">https://github.com/jpontdia/mule-taxpayer-etl</fields>
-        <tags>Micorp, ftp, Database, System, Example</tags>
+        <tags>Micorp, Ftp, Database, Example, Etl</tags>
 	</properties>
 
 	<build>
@@ -29,6 +30,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<configuration>
+				    <classifier>mule-application-example</classifier>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>org.springframework.security</groupId>

@@ -1,10 +1,8 @@
 # Mulesoft ETL demo
 ![Powered by](https://img.shields.io/badge/Powered%20by-Mulesoft-blue.svg)
-  ![Unit test](https://gist.githubusercontent.com/jpontdia/ef8cdef1ff940eac4d8716f6361d2363/raw/micorp-customer-sapi-ut.svg)
-  ![Code coverage](https://gist.githubusercontent.com/jpontdia/ef8cdef1ff940eac4d8716f6361d2363/raw/micorp-customer-sapi-cc.svg)
   ![Build and deploy](https://github.com/jpontdia/mule-micorp-customer-sapi/actions/workflows/build.yml/badge.svg)
 <br>
-Mulesoft ETL for extracting and process tax payers data
+Mulesoft ETL for extracting and process tax payers data with an embedded ANSI/ISO SQL Database 
   
 ## Table of contents
 1. [Description](#description)
@@ -14,14 +12,15 @@ Mulesoft ETL for extracting and process tax payers data
 1. [Exchange deployment](#exchange-deployment)
 
 ## Description  
-Mulesoft ETL for extracting and process tax payers data. The next diagram shows the architecture of the service:
+Mulesoft ETL for extracting and process tax payers data. The application implements 2 flows:
+1. ETL for extracting, convert and push tax payer records to a database. The next diagram shows main functionality:
 
-```mermaid 
+![architecture](https://github.com/jpontdia/mule-micorp-customer-sapi/raw/main/docs/architecture.png)
 
-sequenceDiagram
-    User->>+FTP: Drop Tax Payer file input directory
-    FTP-->>-User: Response file in output directory
-```
+
+2. API to retreive records from database. URL: http://localhost:8081/taxpayer
+
+
 <br>
  
 ## Prerequisites
