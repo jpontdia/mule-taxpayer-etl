@@ -11,3 +11,21 @@ ftp:
   password: mypassword
   directoryinput: in
   directoryoutput: out
+
+# The RAML API and autodiscovery
+api:  
+  group: "${restconnector.api.spec.group}"
+  artifact: "${restconnector.api.spec.artifact}"
+  version: "${restconnector.api.spec.version}"
+  spec: "resource::${api.group}:${api.artifact}:${api.version}:raml:zip:api.raml"
+  id: "0"
+  
+# Service messages
+messages:
+  backend-error: "There was a problem while trying to access the backend repository"
+  apikit-400: "Bad request"
+  apikit-404: "Resource not found"
+  apikit-405: "Method not allowed"
+  apikit-406: "Not acceptable"
+  apikit-415: "Unsupported media type"
+  apikit-501: "Not Implemented"

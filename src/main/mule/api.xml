@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" 
+	xmlns="http://www.mulesoft.org/schema/mule/core" 
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+		http://www.mulesoft.org/schema/mule/core 
+		http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/http 
+		http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+		http://www.mulesoft.org/schema/mule/mule-apikit 
+		http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<flow name="api-main" 
+		doc:id="866669a0-eb7e-49aa-b958-b728212e815c" >
+		
+		<http:listener 
+			doc:name="Listener" 
+			doc:id="e94f678c-6762-44a4-a005-b3a8bbc75628" 
+			config-ref="HTTP_Listener_config" path="/api/*">
+            
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]"> 
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response> 
+        </http:listener>
+		
+		<apikit:router 
+			doc:name="APIkit Router" 
+			doc:id="c3fad558-b3c2-418f-9ea9-2df3696fcd2b" 
+			config-ref="api-config"/>
+		
+		<error-handler ref="global-error-handler"/>
+		
+	</flow>
+	
+    <flow name="get:\taxpayer:api-config">
+		<db:select doc:name="Select" doc:id="e720eddf-ab7b-46e6-ae35-9ef42ea726a9" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select * from demodb.TAX_PAYER ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="0fc1069f-32d3-4bc5-8ddb-32f647f29852" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+    </flow>
+	<flow name="post:\taxpayer:application\json:api-config" doc:id="84823f22-5a5d-4b26-a06c-f35f17a6411d" >
+		<db:insert doc:name="Insert" doc:id="89a4b49d-7261-457c-9ea9-6b0fcb318afb" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO demodb.TAX_PAYER (FIRST_NAME, LAST_NAME, TYPE_TIN, TIN) 
+VALUES
+(:firstName, :lastName, :typeTin, :tin)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+	</flow>
+    
+</mule>

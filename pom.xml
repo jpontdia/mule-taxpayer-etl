@@ -8,7 +8,6 @@
 		<version>1.0.35</version>
 		<relativePath/>
 	</parent>
-	
 	<groupId>078efef1-d139-48ed-92f5-f8d4a0592374</groupId>
 	<artifactId>mule-taxpayer-etl</artifactId>
 	<version>1.0.2</version>
@@ -18,10 +17,15 @@
 
 	<properties>
 		<!-- Exchange documentation. Details on https://docs.mulesoft.com/exchange/to-publish-assets-maven#publish-an-asset-with-mutable-data -->
-        <categories key="API layer">System</categories>
-        <categories key="Backend">Database</categories>
-        <fields key="sourceCode">https://github.com/jpontdia/mule-taxpayer-etl</fields>
-        <tags>Micorp, Ftp, Database, Example, Etl</tags>
+		<categories key="API layer">System</categories>
+		<categories key="Backend">Database</categories>
+		<fields key="sourceCode">https://github.com/jpontdia/mule-taxpayer-etl</fields>
+		<tags>Micorp, Ftp, Database, Example, Etl</tags>
+		
+		<!--RAML specification -->
+		<restconnector.api.spec.group>${project.groupId}</restconnector.api.spec.group>
+		<restconnector.api.spec.artifact>micorp-taxpayer</restconnector.api.spec.artifact>
+		<restconnector.api.spec.version>1.0.2</restconnector.api.spec.version>
 	</properties>
 
 	<build>
@@ -30,7 +34,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<configuration>
-				    <classifier>mule-application-example</classifier>
+					<classifier>mule-application</classifier>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>org.springframework.security</groupId>
@@ -75,6 +79,23 @@
 	</build>
 
 	<dependencies>
+		<!--RAML specification --> 
+		<dependency>
+			<groupId>${restconnector.api.spec.group}</groupId>
+			<artifactId>${restconnector.api.spec.artifact}</artifactId>
+			<version>${restconnector.api.spec.version}</version>
+			<classifier>raml</classifier>
+			<type>zip</type> 
+		</dependency>	
+
+		<!-- Micorp commons -->
+		<dependency>
+			<groupId>078efef1-d139-48ed-92f5-f8d4a0592374</groupId>
+			<artifactId>micorp-commons-library</artifactId>
+			<version>1.0.21</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-sftp-connector</artifactId>
@@ -120,7 +141,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
-		
 		<!-- Database dependencies-->
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
@@ -137,7 +157,6 @@
 		</dependency>
 	</dependencies>
 
-
 	<!--Repository to get the artifacts for your Anypoint organization -->
 	<repositories>
 		<repository>
@@ -146,5 +165,5 @@
 			<url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
 			<layout>default</layout>
 		</repository>
-	</repositories>		
+	</repositories>
 </project>

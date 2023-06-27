@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule 
+<mule
 	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
 	xmlns:db="http://www.mulesoft.org/schema/mule/db"
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:spring="http://www.mulesoft.org/schema/mule/spring" 
@@ -9,17 +10,31 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:schemaLocation="
-	http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd 
-	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+	http://www.mulesoft.org/schema/mule/sftp 
+	http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd 
+	http://www.mulesoft.org/schema/mule/db 
+	http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
 	http://www.mulesoft.org/schema/mule/http 
 	http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+	http://www.mulesoft.org/schema/mule/mule-apikit 
+	http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  
 	http://www.mulesoft.org/schema/mule/core 
 	http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 	http://www.mulesoft.org/schema/mule/spring 
 	http://www.mulesoft.org/schema/mule/spring/current/mule-spring.xsd">
 	
-	<spring:config name="Spring_Config" doc:name="Spring Config" doc:id="662b1e63-881d-4fce-8c9b-3383201e13a5" files="springbeans.xml" />
+	<spring:config 
+		name="Spring_Config" 
+		doc:name="Spring Config" 
+		doc:id="662b1e63-881d-4fce-8c9b-3383201e13a5" 
+		files="springbeans.xml" />
 
+	<apikit:config
+		name="api-config"
+		api="${api.spec}"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+		
 	<http:listener-config 
 		name="HTTP_Listener_config" 
 		doc:name="HTTP Listener config" 
@@ -52,4 +67,10 @@
 		doc:name="Configuration properties" 
 		doc:id="f3b3fba3-9ae4-4e5a-bc2d-4b982be94739" 
 		file="config.yaml" />
+		
+	<import 
+		doc:name="Import" 
+		doc:id="278a0e66-1608-4cbb-a483-fae890884252" 
+		file="global-error.xml" />
+
 </mule>
