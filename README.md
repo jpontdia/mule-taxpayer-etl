@@ -12,7 +12,7 @@ Mulesoft ETL for extracting and process tax payers data with an embedded ANSI/IS
 1. [Exchange deployment](#exchange-deployment)
 
 ## Description  
-Mulesoft ETL for extracting and process tax payers data. The application implements 2 flows:
+Mulesoft ETL for extracting and process tax payers data. The application implements next flows:
 1. ETL for extracting, convert and push tax payer records to a database. The next diagram shows main functionality:
 
 ![etl](docs/etl-taxpayer.png)
@@ -56,8 +56,15 @@ CREATE TABLE demodb.TAX_PAYER (
 );
 ```
 
-2. API to retreive records from database. URL: http://localhost:8081/taxpayer
+2. Instead of implementing the complete functionallity in the ETL, a better aproach is to create a reusable service that can be called by other components and hide the completixity to load and get data from the database, example:
 
+![reusable](docs/reusability.png)
+
+
+The API implements 2 operations: GET and POST 
+![api](docs/api.png)
+
+URL: http://localhost:8081/api/taxpayer
 
 <br>
  
@@ -89,6 +96,7 @@ The sensitive data was removed from the configuration files. The next properties
 | ----------- | ----------- |
 | ftp.username | Username to access the ftp server |
 | ftp.password | Password to access the ftp server |
+| ftp.host | Ftp server hostname |
 
 Mac example: 
 
@@ -96,10 +104,12 @@ Mac example:
 #Properties for salesforce
 export ftp_username=myuser
 export ftp_password=user@fakegmail.com
+export ftp_host=myhostname
 
 mvn clean package \
 -Dftp.username=$ftp_username \
--Dftp.password=$ftp_password
+-Dftp.password=$ftp_password \
+-Dftp.host=$ftp_host
 ```
 
 <br>
