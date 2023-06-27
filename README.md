@@ -15,8 +15,46 @@ Mulesoft ETL for extracting and process tax payers data with an embedded ANSI/IS
 Mulesoft ETL for extracting and process tax payers data. The application implements 2 flows:
 1. ETL for extracting, convert and push tax payer records to a database. The next diagram shows main functionality:
 
-![architecture](https://github.com/jpontdia/mule-micorp-customer-sapi/raw/main/docs/architecture.png)
+![etl](docs/etl-taxpayer.png)
 
+Input csv file, example:
+
+```bash
+FIRSTNAME,LASTNAME,TYPE-TIN,TIN
+Joe,Canales,SSN,123
+Luke,Skywalker,ITIN,234
+```
+
+Output Json file:
+```json
+[
+  {
+    "firstName": "Joe",
+    "lastName": "Canales",
+    "typeTin": "SSN",
+    "tin": "123"
+  },
+  {
+    "firstName": "Luke",
+    "lastName": "Skywalker",
+    "typeTin": "ITIN",
+    "tin": "234"
+  }
+]
+```
+
+Database schema:
+
+```sql
+CREATE TABLE demodb.TAX_PAYER (
+	ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
+	FIRST_NAME VARCHAR(100),
+	LAST_NAME VARCHAR(100),
+	TYPE_TIN VARCHAR(100),
+	TIN VARCHAR(100),
+	PRIMARY KEY (ID)
+);
+```
 
 2. API to retreive records from database. URL: http://localhost:8081/taxpayer
 
