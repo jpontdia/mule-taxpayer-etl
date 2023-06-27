@@ -34,7 +34,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<configuration>
-					<classifier>mule-application</classifier>
+					<classifier>mule-application-example</classifier>
 					<sharedLibraries>
 						<sharedLibrary>
 							<groupId>org.springframework.security</groupId>
