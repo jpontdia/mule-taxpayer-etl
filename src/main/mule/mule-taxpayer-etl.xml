@@ -88,6 +88,7 @@ output application/java
 						doc:name="Batch Aggregator" 
 						doc:id="3e212109-e3a7-4e63-9fc2-c2eb8770cb95" 
 						size="2">
+						<sftp:move doc:name="Move" doc:id="3572d29f-c82c-454a-ab81-6f7d6430bb45" config-ref="SFTP_Config"/>
 						<ee:transform 
 							doc:name="Transform Message" 
 							doc:id="32e509a2-b48d-40c2-8e04-f13371765f28" >
